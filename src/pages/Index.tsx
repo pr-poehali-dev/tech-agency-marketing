@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import Icon from "@/components/ui/icon";
 import { useToast } from "@/hooks/use-toast";
 
@@ -93,6 +94,90 @@ const Index = () => {
     { name: "Алексей Козлов", role: "Технический директор", icon: "User" }
   ];
 
+  const stats = [
+    { value: "500+", label: "Проектов запущено" },
+    { value: "98%", label: "Довольных клиентов" },
+    { value: "250%", label: "Средний рост конверсии" },
+    { value: "24/7", label: "Поддержка клиентов" }
+  ];
+
+  const benefits = [
+    {
+      icon: "Target",
+      title: "Точное попадание в аудиторию",
+      description: "Сегментация и персонализация для максимальной релевантности"
+    },
+    {
+      icon: "BarChart3",
+      title: "Прозрачная аналитика",
+      description: "Детальные отчеты и дашборды в режиме реального времени"
+    },
+    {
+      icon: "Shield",
+      title: "Защита репутации",
+      description: "Соблюдение GDPR, CAN-SPAM и лучших практик отправки"
+    },
+    {
+      icon: "Rocket",
+      title: "Быстрый запуск",
+      description: "Первые результаты уже через 2 недели после старта"
+    },
+    {
+      icon: "Users",
+      title: "Экспертная команда",
+      description: "15+ лет совокупного опыта в digital-маркетинге"
+    },
+    {
+      icon: "LineChart",
+      title: "Масштабируемость",
+      description: "От 1000 до 1 млн контактов без потери качества"
+    }
+  ];
+
+  const testimonials = [
+    {
+      name: "Елена Смирнова",
+      role: "CMO, TechStore",
+      text: "За 3 месяца работы с TechComm мы увеличили конверсию email-рассылок в 4 раза. Профессиональный подход и видимые результаты!",
+      rating: 5
+    },
+    {
+      name: "Игорь Волков",
+      role: "Основатель, FinApp",
+      text: "Автоматизация мессенджер-маркетинга помогла нам сэкономить 20 часов в неделю и увеличить вовлеченность на 180%.",
+      rating: 5
+    },
+    {
+      name: "Ольга Кузнецова",
+      role: "Директор по маркетингу, EduPlatform",
+      text: "Лучшее агентство, с которым мы работали. Глубокая экспертиза, быстрая реакция и постоянная оптимизация кампаний.",
+      rating: 5
+    }
+  ];
+
+  const faqItems = [
+    {
+      question: "Сколько времени занимает запуск первой кампании?",
+      answer: "Обычно от 1 до 2 недель в зависимости от сложности. Мы начинаем с аудита текущих процессов, разработки стратегии и настройки технической инфраструктуры."
+    },
+    {
+      question: "Какие платформы и инструменты вы используете?",
+      answer: "Мы работаем с ведущими ESP (SendGrid, Mailchimp, SendPulse), мессенджерами (Telegram, WhatsApp Business API) и аналитическими системами (Google Analytics, Amplitude). Выбор инструментов зависит от задач клиента."
+    },
+    {
+      question: "Какова средняя стоимость ваших услуг?",
+      answer: "Стоимость зависит от объема работ и сложности проекта. Базовый пакет email-маркетинга начинается от 50 000 ₽/месяц, мессенджер-маркетинг — от 40 000 ₽/месяц. Предлагаем бесплатную консультацию для оценки."
+    },
+    {
+      question: "Предоставляете ли вы гарантии результата?",
+      answer: "Мы не даем абсолютных гарантий роста, так как результаты зависят от многих факторов. Однако у нас есть четкие KPI и в 95% проектов мы достигаем запланированных показателей в первые 3 месяца."
+    },
+    {
+      question: "Можно ли начать с тестового проекта?",
+      answer: "Да, мы предлагаем пилотные проекты на 1-2 месяца для новых клиентов. Это позволяет оценить эффективность нашей работы без долгосрочных обязательств."
+    }
+  ];
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
       <nav className="fixed top-0 w-full bg-white/80 backdrop-blur-md z-50 border-b">
@@ -142,6 +227,19 @@ const Index = () => {
         </div>
       </section>
 
+      <section className="py-16 px-4 bg-white">
+        <div className="container mx-auto">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            {stats.map((stat, index) => (
+              <div key={index} className="text-center">
+                <div className="text-4xl md:text-5xl font-bold text-primary mb-2">{stat.value}</div>
+                <p className="text-sm md:text-base text-muted-foreground">{stat.label}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <section id="services" className="py-20 px-4 bg-white">
         <div className="container mx-auto">
           <div className="text-center mb-16">
@@ -166,7 +264,31 @@ const Index = () => {
         </div>
       </section>
 
-      <section id="cases" className="py-20 px-4">
+      <section className="py-20 px-4 bg-gradient-to-b from-white to-gray-50">
+        <div className="container mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">Почему выбирают нас</h2>
+            <p className="text-xl text-muted-foreground">Преимущества работы с TechComm</p>
+          </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {benefits.map((benefit, index) => (
+              <Card key={index} className="hover:shadow-lg transition-all duration-300">
+                <CardHeader>
+                  <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-3">
+                    <Icon name={benefit.icon as any} className="text-primary" size={24} />
+                  </div>
+                  <CardTitle className="text-lg">{benefit.title}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <CardDescription>{benefit.description}</CardDescription>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="cases" className="py-20 px-4 bg-white">
         <div className="container mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-4">Кейсы и результаты</h2>
@@ -222,7 +344,75 @@ const Index = () => {
         </div>
       </section>
 
-      <section id="team" className="py-20 px-4">
+      <section className="py-20 px-4 bg-gradient-to-b from-white to-gray-50">
+        <div className="container mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">Отзывы клиентов</h2>
+            <p className="text-xl text-muted-foreground">Что говорят о нас</p>
+          </div>
+          <div className="grid md:grid-cols-3 gap-8">
+            {testimonials.map((testimonial, index) => (
+              <Card key={index} className="hover:shadow-xl transition-all">
+                <CardContent className="pt-6">
+                  <div className="flex mb-4">
+                    {[...Array(testimonial.rating)].map((_, i) => (
+                      <Icon key={i} name="Star" className="text-yellow-400 fill-yellow-400" size={20} />
+                    ))}
+                  </div>
+                  <p className="text-muted-foreground mb-6 italic">&ldquo;{testimonial.text}&rdquo;</p>
+                  <div className="flex items-center">
+                    <div className="w-12 h-12 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center mr-3">
+                      <Icon name="User" className="text-white" size={20} />
+                    </div>
+                    <div>
+                      <div className="font-semibold">{testimonial.name}</div>
+                      <div className="text-sm text-muted-foreground">{testimonial.role}</div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="py-20 px-4 bg-white">
+        <div className="container mx-auto max-w-3xl">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">Часто задаваемые вопросы</h2>
+            <p className="text-xl text-muted-foreground">Ответы на популярные вопросы</p>
+          </div>
+          <Accordion type="single" collapsible className="w-full">
+            {faqItems.map((item, index) => (
+              <AccordionItem key={index} value={`item-${index}`}>
+                <AccordionTrigger className="text-left text-lg font-semibold">
+                  {item.question}
+                </AccordionTrigger>
+                <AccordionContent className="text-muted-foreground">
+                  {item.answer}
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        </div>
+      </section>
+
+      <section className="py-20 px-4 bg-gradient-to-r from-primary to-accent">
+        <div className="container mx-auto text-center text-white">
+          <h2 className="text-4xl md:text-5xl font-bold mb-6">
+            Готовы увеличить конверсию вашего бизнеса?
+          </h2>
+          <p className="text-xl mb-8 max-w-2xl mx-auto opacity-90">
+            Запишитесь на бесплатную консультацию и получите персональную стратегию развития
+          </p>
+          <Button size="lg" variant="secondary" className="text-lg px-8">
+            <Icon name="Calendar" className="mr-2" size={20} />
+            Записаться на консультацию
+          </Button>
+        </div>
+      </section>
+
+      <section id="team" className="py-20 px-4 bg-white">
         <div className="container mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-4">Наша команда</h2>
