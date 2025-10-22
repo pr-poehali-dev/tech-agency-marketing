@@ -1,11 +1,14 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import Icon from "@/components/ui/icon";
+import AnimatedCounter from "@/components/AnimatedCounter";
 import { useToast } from "@/hooks/use-toast";
 
 const Index = () => {
@@ -15,6 +18,30 @@ const Index = () => {
     email: "",
     message: ""
   });
+  const [showScrollTop, setShowScrollTop] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 400);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const smoothScroll = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
+    e.preventDefault();
+    const element = document.querySelector(targetId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+      setMobileMenuOpen(false);
+    }
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,7 +50,17 @@ const Index = () => {
       description: "Мы свяжемся с вами в ближайшее время.",
     });
     setFormData({ name: "", email: "", message: "" });
+    setIsDialogOpen(false);
   };
+
+  const partners = [
+    { name: "Yandex", icon: "Building" },
+    { name: "Sberbank", icon: "Landmark" },
+    { name: "VK", icon: "MessageSquare" },
+    { name: "MTS", icon: "Radio" },
+    { name: "Tinkoff", icon: "CreditCard" },
+    { name: "Ozon", icon: "ShoppingCart" }
+  ];
 
   const services = [
     {
@@ -155,6 +192,13 @@ const Index = () => {
     }
   ];
 
+  const socialLinks = [
+    { name: "Telegram", icon: "Send", url: "#" },
+    { name: "VK", icon: "MessageSquare", url: "#" },
+    { name: "WhatsApp", icon: "MessageCircle", url: "#" },
+    { name: "YouTube", icon: "Youtube", url: "#" }
+  ];
+
   const faqItems = [
     {
       question: "Сколько времени занимает запуск первой кампании?",
@@ -189,16 +233,88 @@ const Index = () => {
             <span className="text-xl font-bold">TechComm</span>
           </div>
           <div className="hidden md:flex space-x-8">
-            <a href="#services" className="text-foreground hover:text-primary transition">Услуги</a>
-            <a href="#cases" className="text-foreground hover:text-primary transition">Кейсы</a>
-            <a href="#blog" className="text-foreground hover:text-primary transition">Блог</a>
-            <a href="#team" className="text-foreground hover:text-primary transition">Команда</a>
-            <a href="#contact" className="text-foreground hover:text-primary transition">Контакты</a>
+            <a href="#services" onClick={(e) => smoothScroll(e, '#services')} className="text-foreground hover:text-primary transition cursor-pointer">Услуги</a>
+            <a href="#cases" onClick={(e) => smoothScroll(e, '#cases')} className="text-foreground hover:text-primary transition cursor-pointer">Кейсы</a>
+            <a href="#blog" onClick={(e) => smoothScroll(e, '#blog')} className="text-foreground hover:text-primary transition cursor-pointer">Блог</a>
+            <a href="#team" onClick={(e) => smoothScroll(e, '#team')} className="text-foreground hover:text-primary transition cursor-pointer">Команда</a>
+            <a href="#contact" onClick={(e) => smoothScroll(e, '#contact')} className="text-foreground hover:text-primary transition cursor-pointer">Контакты</a>
           </div>
-          <Button className="hidden md:flex">
-            <Icon name="Mail" className="mr-2" size={16} />
-            Связаться
-          </Button>
+          <div className="flex items-center gap-2">
+            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+              <DialogTrigger asChild>
+                <Button className="hidden md:flex">
+                  <Icon name="Mail" className="mr-2" size={16} />
+                  Связаться
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-md">
+                <DialogHeader>
+                  <DialogTitle>Бесплатная консультация</DialogTitle>
+                  <DialogDescription>
+                    Оставьте заявку и получите персональную стратегию для вашего бизнеса
+                  </DialogDescription>
+                </DialogHeader>
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="modal-name">Имя</Label>
+                    <Input
+                      id="modal-name"
+                      placeholder="Ваше имя"
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="modal-email">Email</Label>
+                    <Input
+                      id="modal-email"
+                      type="email"
+                      placeholder="your@email.com"
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="modal-message">Сообщение</Label>
+                    <Textarea
+                      id="modal-message"
+                      placeholder="Расскажите о вашем проекте..."
+                      rows={3}
+                      value={formData.message}
+                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                      required
+                    />
+                  </div>
+                  <Button type="submit" className="w-full">
+                    <Icon name="Send" className="mr-2" size={16} />
+                    Отправить заявку
+                  </Button>
+                </form>
+              </DialogContent>
+            </Dialog>
+            <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon" className="md:hidden">
+                  <Icon name="Menu" size={24} />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right" className="w-[300px]">
+                <div className="flex flex-col space-y-4 mt-8">
+                  <a href="#services" onClick={(e) => smoothScroll(e, '#services')} className="text-lg font-medium hover:text-primary transition">Услуги</a>
+                  <a href="#cases" onClick={(e) => smoothScroll(e, '#cases')} className="text-lg font-medium hover:text-primary transition">Кейсы</a>
+                  <a href="#blog" onClick={(e) => smoothScroll(e, '#blog')} className="text-lg font-medium hover:text-primary transition">Блог</a>
+                  <a href="#team" onClick={(e) => smoothScroll(e, '#team')} className="text-lg font-medium hover:text-primary transition">Команда</a>
+                  <a href="#contact" onClick={(e) => smoothScroll(e, '#contact')} className="text-lg font-medium hover:text-primary transition">Контакты</a>
+                  <Button className="w-full mt-4" onClick={() => { setMobileMenuOpen(false); setIsDialogOpen(true); }}>
+                    <Icon name="Mail" className="mr-2" size={16} />
+                    Связаться
+                  </Button>
+                </div>
+              </SheetContent>
+            </Sheet>
+          </div>
         </div>
       </nav>
 
@@ -232,7 +348,10 @@ const Index = () => {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {stats.map((stat, index) => (
               <div key={index} className="text-center">
-                <div className="text-4xl md:text-5xl font-bold text-primary mb-2">{stat.value}</div>
+                <AnimatedCounter 
+                  end={stat.value} 
+                  className="text-4xl md:text-5xl font-bold text-primary mb-2"
+                />
                 <p className="text-sm md:text-base text-muted-foreground">{stat.label}</p>
               </div>
             ))}
@@ -350,27 +469,48 @@ const Index = () => {
             <h2 className="text-4xl md:text-5xl font-bold mb-4">Отзывы клиентов</h2>
             <p className="text-xl text-muted-foreground">Что говорят о нас</p>
           </div>
-          <div className="grid md:grid-cols-3 gap-8">
-            {testimonials.map((testimonial, index) => (
-              <Card key={index} className="hover:shadow-xl transition-all">
-                <CardContent className="pt-6">
-                  <div className="flex mb-4">
-                    {[...Array(testimonial.rating)].map((_, i) => (
-                      <Icon key={i} name="Star" className="text-yellow-400 fill-yellow-400" size={20} />
-                    ))}
-                  </div>
-                  <p className="text-muted-foreground mb-6 italic">&ldquo;{testimonial.text}&rdquo;</p>
-                  <div className="flex items-center">
-                    <div className="w-12 h-12 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center mr-3">
-                      <Icon name="User" className="text-white" size={20} />
+          <div className="max-w-6xl mx-auto">
+            <div className="grid md:grid-cols-3 gap-8">
+              {testimonials.map((testimonial, index) => (
+                <Card key={index} className="hover:shadow-xl transition-all animate-fade-in">
+                  <CardContent className="pt-6">
+                    <div className="flex mb-4">
+                      {[...Array(testimonial.rating)].map((_, i) => (
+                        <Icon key={i} name="Star" className="text-yellow-400 fill-yellow-400" size={20} />
+                      ))}
                     </div>
-                    <div>
-                      <div className="font-semibold">{testimonial.name}</div>
-                      <div className="text-sm text-muted-foreground">{testimonial.role}</div>
+                    <p className="text-muted-foreground mb-6 italic">&ldquo;{testimonial.text}&rdquo;</p>
+                    <div className="flex items-center">
+                      <div className="w-12 h-12 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center mr-3">
+                        <Icon name="User" className="text-white" size={20} />
+                      </div>
+                      <div>
+                        <div className="font-semibold">{testimonial.name}</div>
+                        <div className="text-sm text-muted-foreground">{testimonial.role}</div>
+                      </div>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-16 px-4 bg-white">
+        <div className="container mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Нам доверяют</h2>
+            <p className="text-lg text-muted-foreground">Партнеры и клиенты</p>
+          </div>
+          <div className="grid grid-cols-3 md:grid-cols-6 gap-8 items-center">
+            {partners.map((partner, index) => (
+              <div key={index} className="flex flex-col items-center justify-center p-4 hover:scale-110 transition-transform">
+                <div className="w-16 h-16 bg-muted rounded-lg flex items-center justify-center mb-2">
+                  <Icon name={partner.icon as any} className="text-muted-foreground" size={32} />
+                </div>
+                <span className="text-sm font-medium text-muted-foreground">{partner.name}</span>
+              </div>
             ))}
           </div>
         </div>
@@ -497,9 +637,21 @@ const Index = () => {
                 </div>
                 <span className="text-xl font-bold">TechComm</span>
               </div>
-              <p className="text-sm text-gray-300">
+              <p className="text-sm text-gray-300 mb-4">
                 Агентство технических специалистов email и мессенджер маркетинга
               </p>
+              <div className="flex space-x-3">
+                {socialLinks.map((social, index) => (
+                  <a
+                    key={index}
+                    href={social.url}
+                    className="w-10 h-10 bg-white/10 hover:bg-white/20 rounded-lg flex items-center justify-center transition"
+                    aria-label={social.name}
+                  >
+                    <Icon name={social.icon as any} size={20} />
+                  </a>
+                ))}
+              </div>
             </div>
             <div>
               <h3 className="font-semibold mb-4">Услуги</h3>
@@ -538,6 +690,17 @@ const Index = () => {
           </div>
         </div>
       </footer>
+
+      {showScrollTop && (
+        <Button
+          onClick={scrollToTop}
+          size="icon"
+          className="fixed bottom-8 right-8 z-50 rounded-full shadow-lg animate-fade-in"
+          aria-label="Наверх"
+        >
+          <Icon name="ArrowUp" size={20} />
+        </Button>
+      )}
     </div>
   );
 };
